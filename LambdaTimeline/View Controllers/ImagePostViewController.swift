@@ -74,28 +74,38 @@ class ImagePostViewController: ShiftableViewController {
         chooseImageButton.setTitle("", for: [])
     }
     
+    func updateImage() {
+        
+        
+        guard let scaleImage = scaleImage else {
+            return
+        }
+        
+        imageView.image = filterImage(scaleImage)
+    }
+    
     private func filterImage(_ image: UIImage) -> UIImage? {
         //Convert: UIImage -> CGImage
-        guard let cgImage = image.cgImage else { return nil }
+        guard let cgImage = image.cgImage else { return image }
         
         //convert: CGImage -> CIImage
         let ciImage = CIImage(cgImage: cgImage)
         
         //Color filters
-        ciColorFilter.setValue(ciImage, forKey: kCICategoryBuiltIn)
+        ciColorFilter.setValue(ciImage, forKey: kCIInputImageKey)
         ciColorFilter.setValue(brightness.value, forKey: kCIInputBrightnessKey)
-        ciColorFilter.setValue(contrast.value, forKey: kCIInputBrightnessKey)
-        ciColorFilter.setValue(saturation.value, forKey: kCIInputBrightnessKey)
+        ciColorFilter.setValue(contrast.value, forKey: kCIInputContrastKey)
+        ciColorFilter.setValue(saturation.value, forKey: kCIInputSaturationKey)
  
         
         //Blur filter
-        ciMotionBlurFilter.setValue(ciColorFilter.outputImage, forKey: kCICategoryBuiltIn)
-        ciMotionBlurFilter.setValue(blur.value, forKey: kCICategoryBuiltIn)
+        ciMotionBlurFilter.setValue(ciColorFilter.outputImage, forKey: kCIInputImageKey)
+        ciMotionBlurFilter.setValue(blur.value, forKey: kCIInputRadiusKey)
         
  
         //Distortion effect
-        ciBumpDistortion.setValue(ciMotionBlurFilter.outputImage, forKey: kCICategoryBuiltIn)
-        ciBumpDistortion.setValue(distortionEffect.value, forKey: kCICategoryBuiltIn)
+        ciBumpDistortion.setValue(ciMotionBlurFilter.outputImage, forKey: kCIInputImageKey)
+        ciBumpDistortion.setValue(distortionEffect.value, forKey: kCIInputRadiusKey)
 
         //Unwrap and Convert CIImage -> CGImage (Implement Context)
         guard let outputCIImage = ciBumpDistortion.outputImage,
@@ -137,7 +147,7 @@ class ImagePostViewController: ShiftableViewController {
         
         view.endEditing(true)
         
-        guard let originalImage = imageData,let uiImage = UIImage(data: originalImage),  let image = self.filterImage(uiImage)  else {
+        guard let originalImage = originalImage,  let image = self.filterImage(originalImage)  else {
             return
         }
         
@@ -191,27 +201,25 @@ class ImagePostViewController: ShiftableViewController {
         }
         presentImagePickerController()
     }
-    
-    
-    
+
     @IBAction func brightnessSlider(_ sender: UISlider) {
-        updateViews()
+       updateImage()
     }
     
     @IBAction func contrastSlider(_ sender: UISlider) {
-        updateViews()
+        updateImage()
     }
     
     @IBAction func saturationSlider(_ sender: UISlider) {
-        updateViews()
+        updateImage()
     }
     
     @IBAction func blurSlider(_ sender: UISlider) {
-        updateViews()
+        updateImage()
     }
     
     @IBAction func distortionEffectSlider(_ sender: UISlider) {
-        updateViews()
+        updateImage()
     }
     
     
@@ -219,9 +227,24 @@ class ImagePostViewController: ShiftableViewController {
     
     var postController: PostController!
     var post: Post?
-    var imageData: Data? {
+    var imageData: Data?
+    
+    var originalImage: UIImage? {
         didSet{
-            updateViews()
+            guard let originalImage = originalImage else { return }
+            
+            var scaledSize = imageView.bounds.size
+            let scale = UIScreen.main.scale
+            
+            scaledSize = CGSize(width: scaledSize.width * scale, height: scaledSize.height * scale)
+            
+            scaleImage = originalImage.imageByScaling(toSize: scaledSize)
+           
+        }
+    }
+    private var scaleImage: UIImage? {
+        didSet{
+            updateImage()
         }
     }
     private var context = CIContext(options: nil)
@@ -252,7 +275,9 @@ extension ImagePostViewController: UIImagePickerControllerDelegate, UINavigation
         
         guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
         
-        imageView.image = image
+        originalImage = image
+        
+        imageView.image = filterImage(image)
         
         hideControls(shouldHide: false)
         
@@ -261,5 +286,24 @@ extension ImagePostViewController: UIImagePickerControllerDelegate, UINavigation
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension UIImage {
+    func imageByScaling(toSize size: CGSize) -> UIImage? {
+        guard size.width > 0 && size.height > 0 else { return nil }
+
+        let originalAspectRatio = self.size.width/self.size.height
+        var correctedSize = size
+
+        if correctedSize.width > correctedSize.width*originalAspectRatio {
+            correctedSize.width = correctedSize.width*originalAspectRatio
+        } else {
+            correctedSize.height = correctedSize.height/originalAspectRatio
+        }
+
+        return UIGraphicsImageRenderer(size: correctedSize, format: imageRendererFormat).image { context in
+            draw(in: CGRect(origin: .zero, size: correctedSize))
+        }
     }
 }
