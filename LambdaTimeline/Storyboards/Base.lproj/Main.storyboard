@@ -171,6 +171,9 @@
                                                     </label>
                                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="ufj-lO-nLi">
                                                         <rect key="frame" x="-2" y="28.5" width="402" height="36"/>
+                                                        <connections>
+                                                            <action selector="brightnessSlider:" destination="1Aw-4e-BW2" eventType="valueChanged" id="ems-cK-rYb"/>
+                                                        </connections>
                                                     </slider>
                                                 </subviews>
                                             </stackView>
@@ -184,7 +187,10 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="DTt-Vv-MtB">
-                                                        <rect key="frame" x="-2" y="28.5" width="402" height="36"/>
+                                                        <rect key="frame" x="-2" y="27.5" width="402" height="36"/>
+                                                        <connections>
+                                                            <action selector="contrastSlider:" destination="1Aw-4e-BW2" eventType="valueChanged" id="rDJ-hm-ppE"/>
+                                                        </connections>
                                                     </slider>
                                                 </subviews>
                                             </stackView>
@@ -199,6 +205,9 @@
                                                     </label>
                                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Sc3-dR-vS1">
                                                         <rect key="frame" x="-2" y="28.5" width="402" height="36.5"/>
+                                                        <connections>
+                                                            <action selector="saturationSlider:" destination="1Aw-4e-BW2" eventType="valueChanged" id="P0f-iJ-Npc"/>
+                                                        </connections>
                                                     </slider>
                                                 </subviews>
                                             </stackView>
@@ -213,6 +222,9 @@
                                                     </label>
                                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="ZA9-wE-s5d">
                                                         <rect key="frame" x="-2" y="28.5" width="402" height="36"/>
+                                                        <connections>
+                                                            <action selector="blurSlider:" destination="1Aw-4e-BW2" eventType="valueChanged" id="Xo4-oI-Ydl"/>
+                                                        </connections>
                                                     </slider>
                                                 </subviews>
                                             </stackView>
@@ -227,6 +239,9 @@
                                                     </label>
                                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="gT3-9I-PEL">
                                                         <rect key="frame" x="-2" y="28.5" width="402" height="36"/>
+                                                        <connections>
+                                                            <action selector="distortionEffectSlider:" destination="1Aw-4e-BW2" eventType="valueChanged" id="KWL-Hf-7UE"/>
+                                                        </connections>
                                                     </slider>
                                                 </subviews>
                                             </stackView>
@@ -271,10 +286,20 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="blur" destination="ZA9-wE-s5d" id="j2g-iU-ueK"/>
+                        <outlet property="blurLabel" destination="zcd-Q0-5oE" id="hZ2-kz-pT4"/>
+                        <outlet property="brightness" destination="ufj-lO-nLi" id="xiM-qY-WO8"/>
+                        <outlet property="brightnessLabel" destination="1Ab-DV-LaF" id="cKJ-LC-BS1"/>
                         <outlet property="chooseImageButton" destination="VxD-cu-jHT" id="KVs-no-MbU"/>
+                        <outlet property="contrast" destination="DTt-Vv-MtB" id="J5Q-iv-Lqq"/>
+                        <outlet property="contrastLabel" destination="Iu6-l2-cix" id="xyX-kV-27L"/>
+                        <outlet property="distortionEffect" destination="gT3-9I-PEL" id="vX3-ac-EFU"/>
+                        <outlet property="distortionEffectLabel" destination="Bhc-7Z-qtw" id="zhD-lo-eCH"/>
                         <outlet property="imageHeightConstraint" destination="MHD-wr-Gq9" id="HyG-8g-Ck1"/>
                         <outlet property="imageView" destination="4eK-5F-H5h" id="e7m-c5-Xhz"/>
                         <outlet property="postButton" destination="hsH-Uv-tug" id="ZBn-KE-cpU"/>
+                        <outlet property="saturation" destination="Sc3-dR-vS1" id="UYp-a0-Th2"/>
+                        <outlet property="saturationLabel" destination="BGZ-XT-MtY" id="e4J-X3-fzD"/>
                         <outlet property="titleTextField" destination="Op6-OA-6Ou" id="JEe-cj-4mv"/>
                     </connections>
                 </viewController>

@@ -11,6 +11,23 @@ import Photos
 
 class ImagePostViewController: ShiftableViewController {
     
+    //MARK: - Outlets
+    
+    @IBOutlet weak var brightness: UISlider!
+    @IBOutlet weak var contrast: UISlider!
+    @IBOutlet weak var saturation: UISlider!
+    @IBOutlet weak var blur: UISlider!
+    @IBOutlet weak var distortionEffect: UISlider!
+    
+    @IBOutlet weak var brightnessLabel: UILabel!
+    @IBOutlet weak var contrastLabel: UILabel!
+    @IBOutlet weak var saturationLabel: UILabel!
+    @IBOutlet weak var blurLabel: UILabel!
+    @IBOutlet weak var distortionEffectLabel: UILabel!
+    
+    
+    //MARK: - View LifeCycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -18,6 +35,8 @@ class ImagePostViewController: ShiftableViewController {
         
         updateViews()
     }
+    
+    //MARK: - Custom Methods
     
     func updateViews() {
         
@@ -36,6 +55,13 @@ class ImagePostViewController: ShiftableViewController {
         chooseImageButton.setTitle("", for: [])
     }
     
+    func setImageViewHeight(with aspectRatio: CGFloat) {
+           
+           imageHeightConstraint.constant = imageView.frame.size.width * aspectRatio
+           
+           view.layoutSubviews()
+       }
+    
     private func presentImagePickerController() {
         
         guard UIImagePickerController.isSourceTypeAvailable(.photoLibrary) else {
@@ -51,6 +77,8 @@ class ImagePostViewController: ShiftableViewController {
 
         present(imagePicker, animated: true, completion: nil)
     }
+    
+    //MARK: - Actions
     
     @IBAction func createPost(_ sender: Any) {
         
@@ -107,12 +135,23 @@ class ImagePostViewController: ShiftableViewController {
         presentImagePickerController()
     }
     
-    func setImageViewHeight(with aspectRatio: CGFloat) {
-        
-        imageHeightConstraint.constant = imageView.frame.size.width * aspectRatio
-        
-        view.layoutSubviews()
+    @IBAction func brightnessSlider(_ sender: UISlider) {
     }
+    
+    @IBAction func contrastSlider(_ sender: UISlider) {
+    }
+    
+    @IBAction func saturationSlider(_ sender: UISlider) {
+    }
+    
+    @IBAction func blurSlider(_ sender: UISlider) {
+    }
+    
+    @IBAction func distortionEffectSlider(_ sender: UISlider) {
+    }
+    
+    
+    //MARK: - Properties
     
     var postController: PostController!
     var post: Post?
@@ -124,6 +163,9 @@ class ImagePostViewController: ShiftableViewController {
     @IBOutlet weak var imageHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var postButton: UIBarButtonItem!
 }
+
+
+    //MARK: - UIImagePickerControllerDelegate - UINavigationControllerDelegate
 
 extension ImagePostViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
