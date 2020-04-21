@@ -43,19 +43,19 @@ class ImagePostViewController: ShiftableViewController {
     //MARK: - Custom Methods
     
     func hideControls(shouldHide state: Bool) {
-        //Sliders
-        brightness.isHidden = state
-        contrast.isHidden = state
-        saturation.isHidden = state
-        blur.isHidden = state
-        distortionEffect.isHidden = state
-        
         //Labels
         brightnessLabel.isHidden = state
         contrastLabel.isHidden = state
         saturationLabel.isHidden = state
         blurLabel.isHidden = state
         distortionEffectLabel.isHidden = state
+        
+        //Sliders
+        brightness.isHidden = state
+        contrast.isHidden = state
+        saturation.isHidden = state
+        blur.isHidden = state
+        distortionEffect.isHidden = state
     }
     
     func updateViews() {
@@ -69,12 +69,12 @@ class ImagePostViewController: ShiftableViewController {
         
         setImageViewHeight(with: image.ratio)
         
-        imageView.image = image
+        imageView.image = filterImage(image)
         
         chooseImageButton.setTitle("", for: [])
     }
     
-    func filterImage(_ image: UIImage) -> UIImage? {
+    private func filterImage(_ image: UIImage) -> UIImage? {
         //Convert: UIImage -> CGImage
         guard let cgImage = image.cgImage else { return nil }
         
@@ -119,13 +119,16 @@ class ImagePostViewController: ShiftableViewController {
             return
         }
         
-        let imagePicker = UIImagePickerController()
-        
-        imagePicker.delegate = self
-        
-        imagePicker.sourceType = .photoLibrary
-
-        present(imagePicker, animated: true, completion: nil)
+        DispatchQueue.main.async {
+            
+            let imagePicker = UIImagePickerController()
+            
+            imagePicker.delegate = self
+            
+            imagePicker.sourceType = .photoLibrary
+            
+            self.present(imagePicker, animated: true, completion: nil)
+        }
     }
     
     //MARK: - Actions
@@ -134,7 +137,11 @@ class ImagePostViewController: ShiftableViewController {
         
         view.endEditing(true)
         
-        guard let imageData = imageView.image?.jpegData(compressionQuality: 0.1),
+        guard let originalImage = imageData,let uiImage = UIImage(data: originalImage),  let image = self.filterImage(uiImage)  else {
+            return
+        }
+        
+        guard let imageData = image.jpegData(compressionQuality: 0.1),
             let title = titleTextField.text, title != "" else {
             presentInformationalAlertController(title: "Uh-oh", message: "Make sure that you add a photo and a caption before posting.")
             return
@@ -212,7 +219,11 @@ class ImagePostViewController: ShiftableViewController {
     
     var postController: PostController!
     var post: Post?
-    var imageData: Data?
+    var imageData: Data? {
+        didSet{
+            updateViews()
+        }
+    }
     private var context = CIContext(options: nil)
     
     private let ciColorFilter = CIFilter(name: "CIColorControls")!
