@@ -99,12 +99,12 @@ class ImagePostViewController: ShiftableViewController {
  
         
         //Blur filter
-        ciMotionBlurFilter.setValue(ciColorFilter.outputImage, forKey: kCIInputImageKey)
-        ciMotionBlurFilter.setValue(blur.value, forKey: kCIInputRadiusKey)
+        ciBlurFilter.setValue(ciColorFilter.outputImage, forKey: kCIInputImageKey)
+        ciBlurFilter.setValue(blur.value, forKey: kCIInputRadiusKey)
         
  
         //Distortion effect
-        ciBumpDistortion.setValue(ciMotionBlurFilter.outputImage, forKey: kCIInputImageKey)
+        ciBumpDistortion.setValue(ciBlurFilter.outputImage, forKey: kCIInputImageKey)
         ciBumpDistortion.setValue(distortionEffect.value, forKey: kCIInputRadiusKey)
 
         //Unwrap and Convert CIImage -> CGImage (Implement Context)
@@ -250,7 +250,7 @@ class ImagePostViewController: ShiftableViewController {
     private var context = CIContext(options: nil)
     
     private let ciColorFilter = CIFilter(name: "CIColorControls")!
-    private let ciMotionBlurFilter = CIFilter(name: "CIMotionBlur")!
+    private let ciBlurFilter = CIFilter(name: "CIGaussianBlur")!
     private let ciBumpDistortion = CIFilter(name: "CIBumpDistortion")!
     
     
@@ -277,7 +277,7 @@ extension ImagePostViewController: UIImagePickerControllerDelegate, UINavigation
         
         originalImage = image
         
-        imageView.image = filterImage(image)
+        imageView.image = filterImage(scaleImage!)
         
         hideControls(shouldHide: false)
         
