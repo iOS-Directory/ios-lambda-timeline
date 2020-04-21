@@ -34,9 +34,27 @@ class ImagePostViewController: ShiftableViewController {
         setImageViewHeight(with: 1.0)
         
         updateViews()
+        
+        hideControls(shouldHide: true)
     }
     
     //MARK: - Custom Methods
+    
+    func hideControls(shouldHide state: Bool) {
+        //Sliders
+        brightness.isHidden = state
+        contrast.isHidden = state
+        saturation.isHidden = state
+        blur.isHidden = state
+        distortionEffect.isHidden = state
+        
+        //Labels
+        brightnessLabel.isHidden = state
+        contrastLabel.isHidden = state
+        saturationLabel.isHidden = state
+        blurLabel.isHidden = state
+        distortionEffectLabel.isHidden = state
+    }
     
     func updateViews() {
         
@@ -45,6 +63,8 @@ class ImagePostViewController: ShiftableViewController {
                 title = "New Post"
                 return
         }
+        
+
         
         title = post?.title
         
@@ -164,7 +184,6 @@ class ImagePostViewController: ShiftableViewController {
     @IBOutlet weak var postButton: UIBarButtonItem!
 }
 
-
     //MARK: - UIImagePickerControllerDelegate - UINavigationControllerDelegate
 
 extension ImagePostViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -178,6 +197,8 @@ extension ImagePostViewController: UIImagePickerControllerDelegate, UINavigation
         guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
         
         imageView.image = image
+        
+        hideControls(shouldHide: false)
         
         setImageViewHeight(with: image.ratio)
     }
