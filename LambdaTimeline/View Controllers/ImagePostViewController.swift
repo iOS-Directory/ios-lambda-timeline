@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import CoreImage
+import CoreImage.CIFilterBuiltins
 import Photos
 
 class ImagePostViewController: ShiftableViewController {
@@ -63,9 +65,6 @@ class ImagePostViewController: ShiftableViewController {
                 title = "New Post"
                 return
         }
-        
-
-        
         title = post?.title
         
         setImageViewHeight(with: image.ratio)
@@ -73,6 +72,37 @@ class ImagePostViewController: ShiftableViewController {
         imageView.image = image
         
         chooseImageButton.setTitle("", for: [])
+    }
+    
+    func filterImage(_ image: UIImage) -> UIImage? {
+        //Convert: UIImage -> CGImage
+        guard let cgImage = image.cgImage else { return nil }
+        
+        //convert: CGImage -> CIImage
+        let ciImage = CIImage(cgImage: cgImage)
+        
+        //Color filters
+        ciColorFilter.setValue(ciImage, forKey: kCICategoryBuiltIn)
+        ciColorFilter.setValue(brightness.value, forKey: kCIInputBrightnessKey)
+        ciColorFilter.setValue(contrast.value, forKey: kCIInputBrightnessKey)
+        ciColorFilter.setValue(saturation.value, forKey: kCIInputBrightnessKey)
+ 
+        
+        //Blur filter
+        ciMotionBlurFilter.setValue(ciColorFilter.outputImage, forKey: kCICategoryBuiltIn)
+        ciMotionBlurFilter.setValue(blur.value, forKey: kCICategoryBuiltIn)
+        
+ 
+        //Distortion effect
+        ciBumpDistortion.setValue(ciMotionBlurFilter.outputImage, forKey: kCICategoryBuiltIn)
+        ciBumpDistortion.setValue(distortionEffect.value, forKey: kCICategoryBuiltIn)
+
+        //Unwrap and Convert CIImage -> CGImage (Implement Context)
+        guard let outputCIImage = ciBumpDistortion.outputImage,
+            let outputCGImage = context.createCGImage(outputCIImage, from: outputCIImage.extent) else { return nil }
+        
+        //Convert CGImage -> UIImage and return
+        return UIImage(cgImage: outputCGImage)
     }
     
     func setImageViewHeight(with aspectRatio: CGFloat) {
@@ -155,19 +185,26 @@ class ImagePostViewController: ShiftableViewController {
         presentImagePickerController()
     }
     
+    
+    
     @IBAction func brightnessSlider(_ sender: UISlider) {
+        updateViews()
     }
     
     @IBAction func contrastSlider(_ sender: UISlider) {
+        updateViews()
     }
     
     @IBAction func saturationSlider(_ sender: UISlider) {
+        updateViews()
     }
     
     @IBAction func blurSlider(_ sender: UISlider) {
+        updateViews()
     }
     
     @IBAction func distortionEffectSlider(_ sender: UISlider) {
+        updateViews()
     }
     
     
@@ -176,6 +213,14 @@ class ImagePostViewController: ShiftableViewController {
     var postController: PostController!
     var post: Post?
     var imageData: Data?
+    private var context = CIContext(options: nil)
+    
+    private let ciColorFilter = CIFilter(name: "CIColorControls")!
+    private let ciMotionBlurFilter = CIFilter(name: "CIMotionBlur")!
+    private let ciBumpDistortion = CIFilter(name: "CIBumpDistortion")!
+    
+    
+    //MARK: - Outlers 2
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var titleTextField: UITextField!
