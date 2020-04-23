@@ -481,13 +481,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vch-9w-5Pk">
+                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vch-9w-5Pk">
                                 <rect key="frame" x="147" y="388" width="120" height="120"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="PZL-ag-oQl"/>
                                     <constraint firstAttribute="height" constant="120" id="eE2-Pt-RoQ"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="60"/>
                                 <state key="normal" image="mic.fill" catalog="system"/>
                                 <state key="selected" image="mic.slash.fill" catalog="system"/>
                                 <connections>
