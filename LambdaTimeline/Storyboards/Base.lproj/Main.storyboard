@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="xB5-Kl-GM2">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -474,5 +473,60 @@
             </objects>
             <point key="canvasLocation" x="1968.8" y="472.71364317841085"/>
         </scene>
+        <!--Audio Comment View Controller-->
+        <scene sceneID="YL8-DI-JGo">
+            <objects>
+                <viewController storyboardIdentifier="AudioCommentVC" id="Jlz-vh-EIA" customClass="AudioCommentViewController" customModule="LambdaTimeline" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="zsA-QF-UFf">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vch-9w-5Pk">
+                                <rect key="frame" x="147" y="388" width="120" height="120"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="120" id="PZL-ag-oQl"/>
+                                    <constraint firstAttribute="height" constant="120" id="eE2-Pt-RoQ"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="60"/>
+                                <state key="normal" image="mic.fill" catalog="system"/>
+                                <state key="selected" image="mic.slash.fill" catalog="system"/>
+                                <connections>
+                                    <action selector="toggleRecord:" destination="Jlz-vh-EIA" eventType="touchUpInside" id="NjI-EA-tva"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aNf-gs-8A2">
+                                <rect key="frame" x="344" y="64" width="50" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="eAp-K7-PHh"/>
+                                    <constraint firstAttribute="height" constant="40" id="ssS-JA-UbR"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <state key="normal" title="Done"/>
+                                <connections>
+                                    <action selector="doneButtonPressed:" destination="Jlz-vh-EIA" eventType="touchUpInside" id="BZJ-yL-X8v"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="aNf-gs-8A2" firstAttribute="top" secondItem="aKB-xR-5e7" secondAttribute="top" constant="20" id="6JT-h8-zzc"/>
+                            <constraint firstItem="Vch-9w-5Pk" firstAttribute="centerX" secondItem="zsA-QF-UFf" secondAttribute="centerX" id="SnC-qz-nv3"/>
+                            <constraint firstItem="Vch-9w-5Pk" firstAttribute="centerY" secondItem="zsA-QF-UFf" secondAttribute="centerY" id="TdN-Wy-sR0"/>
+                            <constraint firstItem="aKB-xR-5e7" firstAttribute="trailing" secondItem="aNf-gs-8A2" secondAttribute="trailing" constant="20" id="t4C-3S-pak"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="aKB-xR-5e7"/>
+                    </view>
+                    <connections>
+                        <outlet property="recordButton" destination="Vch-9w-5Pk" id="Lll-69-YyK"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dyD-ao-kO3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2818.840579710145" y="471.42857142857139"/>
+        </scene>
     </scenes>
+    <resources>
+        <image name="mic.fill" catalog="system" width="108" height="128"/>
+        <image name="mic.slash.fill" catalog="system" width="112" height="128"/>
+    </resources>
 </document>
