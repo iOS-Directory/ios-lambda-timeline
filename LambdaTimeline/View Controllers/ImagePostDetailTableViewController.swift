@@ -45,7 +45,7 @@ class ImagePostDetailTableViewController: UITableViewController {
             
             guard let commentText = commentTextField?.text else { return }
             
-            self.postController.addComment(with: commentText, to: &self.post!)
+            self.postController.addComment(with: commentText, audioURL: nil, to: &self.post!)
             
             DispatchQueue.main.async {
                 self.tableView.reloadData()
@@ -57,7 +57,10 @@ class ImagePostDetailTableViewController: UITableViewController {
             
              let audioCommentVC = self.storyboard?.instantiateViewController(withIdentifier: "AudioCommentVC") as! AudioCommentViewController  
  
-            self.present(audioCommentVC, animated: true, completion: nil)
+            self.present(audioCommentVC, animated: true) {
+                //Pass the post to the controller to create a new audio post
+                audioCommentVC.post = self.post
+            }
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)

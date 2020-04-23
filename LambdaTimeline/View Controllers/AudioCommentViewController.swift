@@ -13,6 +13,8 @@ import AVFoundation
 class AudioCommentViewController: UIViewController {
     
     //MARK: - Properties
+    var post: Post?
+    private var postController = PostController()
     private var recordingURL: URL?
     private var audioRecorder: AVAudioRecorder?
     private var isRecording: Bool {
@@ -80,8 +82,7 @@ class AudioCommentViewController: UIViewController {
         try session.setCategory(.playAndRecord, options: [.defaultToSpeaker])
         try session.setActive(true, options: []) // can fail if on a phone call, for instance
     }
-}
-
+}   
  
 
 //MARK: - AVAudioRecorderDelegate
@@ -92,6 +93,12 @@ extension AudioCommentViewController:AVAudioRecorderDelegate{
         updateViews()
         //get the url and save it to the var recordingURL
         recordingURL = recorder.url
+        
+        //Create comment
+        if var postInfo = post{
+               self.postController.addComment(with: nil, audioURL: recordingURL, to: &postInfo)
+           }
+        
         self.audioRecorder = nil
     }
     
