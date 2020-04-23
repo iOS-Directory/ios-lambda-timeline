@@ -29,7 +29,7 @@ class AudioCommentViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateViews()
-        // Do any additional setup after loading the view.
+        try? prepareAudioSession()
     }
     
     //MARK: - Actions
@@ -74,6 +74,12 @@ class AudioCommentViewController: UIViewController {
     func updateViews() {
           recordButton.isSelected = isRecording
      }
+    
+    func prepareAudioSession() throws {
+        let session = AVAudioSession.sharedInstance()
+        try session.setCategory(.playAndRecord, options: [.defaultToSpeaker])
+        try session.setActive(true, options: []) // can fail if on a phone call, for instance
+    }
 }
 
  
