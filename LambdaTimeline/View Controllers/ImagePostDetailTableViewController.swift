@@ -22,6 +22,7 @@ class ImagePostDetailTableViewController: UITableViewController {
     }
     var postController: PostController!
     var imageData: Data?
+    private var selectedAudioCell: UITableViewCell?
     
     private var audioPlayer: AVAudioPlayer? {
         didSet{
@@ -29,7 +30,7 @@ class ImagePostDetailTableViewController: UITableViewController {
         }
     }
     private var isPlaying: Bool {
-        audioPlayer?.isPlaying ?? false
+       return audioPlayer!.isPlaying
     }
     
     //MARK: - View Lifecycle
@@ -37,6 +38,7 @@ class ImagePostDetailTableViewController: UITableViewController {
         super.viewDidLoad()
         updateViews()
         try? prepareAudioSession()
+    
     }
     
     //MARK: - Custom Methods
@@ -56,8 +58,10 @@ class ImagePostDetailTableViewController: UITableViewController {
     func togglePlay() {
         if isPlaying{
             audioPlayer?.pause()
+            selectedAudioCell?.imageView?.image = UIImage(systemName: "play.fill")
         }else{
             audioPlayer?.play()
+            selectedAudioCell?.imageView?.image = UIImage(systemName: "pause.fill")
         }
         updateViews()
     }
@@ -133,9 +137,8 @@ class ImagePostDetailTableViewController: UITableViewController {
         }
         
         if let _ = comment?.audioURL {
-            
-        cell.textLabel?.text = "Audio Comment, Tap to play!"
-      
+            cell.imageView?.image = UIImage(systemName: "play.fill")
+            cell.textLabel?.text = "Audio Comment, Tap to play!"
         }
         cell.detailTextLabel?.text = comment?.author.displayName
         
@@ -145,6 +148,7 @@ class ImagePostDetailTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let comment = post?.comments[indexPath.row + 1]
+        selectedAudioCell = tableView.cellForRow(at: indexPath)
         
         if let audioURL = comment?.audioURL{
             print("didSelectRowAt URL: \(audioURL)")
@@ -168,11 +172,12 @@ class ImagePostDetailTableViewController: UITableViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var authorLabel: UILabel!
     @IBOutlet weak var imageViewAspectRatioConstraint: NSLayoutConstraint!
+    
 }
 
 extension ImagePostDetailTableViewController: AVAudioPlayerDelegate{
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        print("Finished playing")
+        selectedAudioCell?.imageView?.image = UIImage(systemName: "play.fill")
     }
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
         if let error = error {
