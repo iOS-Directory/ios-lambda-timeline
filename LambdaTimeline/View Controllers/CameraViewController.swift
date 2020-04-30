@@ -10,6 +10,17 @@ import UIKit
 
 class CameraViewController: UIViewController {
 
+    
+    //MARK: - Properties
+    
+    
+    //MARK: - Oulets
+    @IBOutlet weak var camaraView: CameraPreviewView!
+    @IBOutlet weak var recordButton: UIButton!
+    
+    
+    //MARK: - View Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -17,14 +28,10 @@ class CameraViewController: UIViewController {
     }
     
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    //MARK: - Actions
+    @IBAction func recordButtonPressed(_ sender: UIButton) {
+        print("Start Recording")
     }
-    */
+    
 
 }

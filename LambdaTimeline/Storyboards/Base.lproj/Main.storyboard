@@ -380,14 +380,44 @@
                     <view key="view" contentMode="scaleToFill" id="Mtb-Fe-1PA">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SwB-ld-gBA" customClass="CameraPreviewView" customModule="LambdaTimeline">
+                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JyR-g1-66d">
+                                        <rect key="frame" x="149" y="642" width="116" height="116"/>
+                                        <state key="normal" image="Record"/>
+                                        <state key="selected" image="Stop"/>
+                                        <connections>
+                                            <action selector="recordButtonPressed:" destination="gBG-uh-iZm" eventType="touchUpInside" id="SyJ-XC-zFy"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstItem="JyR-g1-66d" firstAttribute="centerX" secondItem="SwB-ld-gBA" secondAttribute="centerX" id="IOe-Nu-k2s"/>
+                                    <constraint firstAttribute="bottom" secondItem="JyR-g1-66d" secondAttribute="bottom" constant="50" id="RAg-dA-ZQr"/>
+                                </constraints>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="SwB-ld-gBA" firstAttribute="leading" secondItem="Zey-l1-f7F" secondAttribute="leading" id="B3e-KJ-lvU"/>
+                            <constraint firstAttribute="bottom" secondItem="SwB-ld-gBA" secondAttribute="bottom" id="L3C-dK-RnH"/>
+                            <constraint firstItem="SwB-ld-gBA" firstAttribute="trailing" secondItem="Zey-l1-f7F" secondAttribute="trailing" id="cTZ-9A-2Er"/>
+                            <constraint firstItem="SwB-ld-gBA" firstAttribute="top" secondItem="Zey-l1-f7F" secondAttribute="top" id="xa8-Fx-hxi"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="Zey-l1-f7F"/>
                     </view>
                     <navigationItem key="navigationItem" id="IDP-7t-OEW"/>
+                    <connections>
+                        <outlet property="camaraView" destination="SwB-ld-gBA" id="aPr-Ac-dji"/>
+                        <outlet property="recordButton" destination="JyR-g1-66d" id="oOB-OY-f2A"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SHe-WY-vQM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1188" y="874"/>
+            <point key="canvasLocation" x="1186.9565217391305" y="873.88392857142856"/>
         </scene>
         <!--Title-->
         <scene sceneID="9zi-Aq-zJI">
@@ -491,4 +521,8 @@
             <point key="canvasLocation" x="1968.8" y="472.71364317841085"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Record" width="116" height="116"/>
+        <image name="Stop" width="116" height="116"/>
+    </resources>
 </document>
