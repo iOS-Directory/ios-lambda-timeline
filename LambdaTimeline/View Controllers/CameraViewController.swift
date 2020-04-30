@@ -15,6 +15,8 @@ class CameraViewController: UIViewController {
     //MARK: - Properties
     lazy private var captureSession = AVCaptureSession()
     
+    lazy private var fileOutput = AVCaptureMovieFileOutput()
+    
     //MARK: - Oulets
     @IBOutlet weak var cameraView: CameraPreviewView!
     @IBOutlet weak var recordButton: UIButton!
@@ -65,6 +67,14 @@ class CameraViewController: UIViewController {
         guard let audioInput = try? AVCaptureDeviceInput(device: microphone), captureSession.canAddInput(audioInput) else {
             fatalError("Can't create and add input from microphone")
         }
+        captureSession.addInput(audioInput)
+        
+        
+        //Add output
+        guard captureSession.canAddOutput(fileOutput) else {
+            fatalError("Cannot record movie to disk")
+        }
+        captureSession.addOutput(fileOutput)
         
         captureSession.commitConfiguration()
         
