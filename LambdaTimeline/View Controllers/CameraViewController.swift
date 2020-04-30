@@ -43,7 +43,7 @@ class CameraViewController: UIViewController {
     
     //MARK: - Custom Methods
     
-    func setupCaptureSession() {
+    private func setupCaptureSession() {
         //Get the best available camera
       let camera = bestCamera()
         
@@ -82,7 +82,7 @@ class CameraViewController: UIViewController {
         cameraView.session = captureSession
     }
     
-    func bestCamera() -> AVCaptureDevice {
+    private func bestCamera() -> AVCaptureDevice {
         if let device = AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back) {
                 //If this camera is available then we return it
                 return device
@@ -101,10 +101,46 @@ class CameraViewController: UIViewController {
         fatalError("No audio")
     }
     
+    private func toggleRecord(){
+        if fileOutput.isRecording {
+            fileOutput.stopRecording()
+        }else{
+            fileOutput.startRecording(to: newRecordingURL(), recordingDelegate: self)
+        }
+    }
+    
+    private func newRecordingURL() -> URL {
+            let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
 
+            let formatter = ISO8601DateFormatter()
+            formatter.formatOptions = [.withInternetDateTime]
+
+            let name = formatter.string(from: Date())
+            let fileURL = documentsDirectory.appendingPathComponent(name).appendingPathExtension("mov")
+            return fileURL
+        }
+    
+    
     //MARK: - Actions
     @IBAction func recordButtonPressed(_ sender: UIButton) {
-        print("Start Recording")
+        toggleRecord()
+    }
+    
+
+}
+
+
+extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
+    
+    func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
+        
+    }
+    
+    
+    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
+        if let error = error{
+            print("Error saving video: \(error)")
+        }
     }
     
 
