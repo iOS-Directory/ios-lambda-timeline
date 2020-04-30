@@ -120,13 +120,15 @@ class CameraViewController: UIViewController {
             return fileURL
         }
     
+    private func updateView(){
+        recordButton.isSelected = fileOutput.isRecording
+    }
     
     //MARK: - Actions
     @IBAction func recordButtonPressed(_ sender: UIButton) {
         toggleRecord()
     }
     
-
 }
 
 
