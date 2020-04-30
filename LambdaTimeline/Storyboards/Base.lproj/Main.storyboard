@@ -411,7 +411,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="IDP-7t-OEW"/>
                     <connections>
-                        <outlet property="camaraView" destination="SwB-ld-gBA" id="aPr-Ac-dji"/>
+                        <outlet property="cameraView" destination="SwB-ld-gBA" id="aPr-Ac-dji"/>
                         <outlet property="recordButton" destination="JyR-g1-66d" id="oOB-OY-f2A"/>
                     </connections>
                 </viewController>
