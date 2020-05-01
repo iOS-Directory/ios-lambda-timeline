@@ -6,6 +6,7 @@
 	<string>$(PRODUCT_NAME) needs access to the Microphone to record videos with audio</string>
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs access to the camera to record videos</string>
+	<string>$(PRODUCT_NAME) needs access to start an audio recording</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>

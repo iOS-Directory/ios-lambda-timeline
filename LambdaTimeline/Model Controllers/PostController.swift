@@ -35,12 +35,12 @@ class PostController {
         }
     }
     
-    func addComment(with text: String, to post: inout Post) {
+    func addComment(with text: String?, audioURL: URL?, to post: inout Post) {
         
         guard let currentUser = Auth.auth().currentUser,
             let author = Author(user: currentUser) else { return }
         
-        let comment = Comment(text: text, author: author)
+        let comment = Comment(text: text, audioURL: audioURL, author: author)
         post.comments.append(comment)
         
         savePostToFirebase(post)
