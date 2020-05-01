@@ -102,6 +102,7 @@
                     <connections>
                         <segue destination="1Aw-4e-BW2" kind="show" identifier="AddImagePost" id="jaI-fq-Woc"/>
                         <segue destination="OyM-8q-Icp" kind="show" identifier="ViewImagePost" id="hhs-es-AdQ"/>
+                        <segue destination="gBG-uh-iZm" kind="show" identifier="AddVideoPost" id="LAg-TQ-0Zh"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WRz-lg-pQU" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -374,6 +375,59 @@
             </objects>
             <point key="canvasLocation" x="-450.72463768115944" y="107.14285714285714"/>
         </scene>
+        <!--Camera View Controller-->
+        <scene sceneID="RGK-4x-XHD">
+            <objects>
+                <viewController storyboardIdentifier="AddVideoPost" id="gBG-uh-iZm" customClass="CameraViewController" customModule="LambdaTimeline" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Mtb-Fe-1PA">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SwB-ld-gBA" customClass="CameraPreviewView" customModule="LambdaTimeline">
+                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JyR-g1-66d">
+                                        <rect key="frame" x="149" y="642" width="116" height="116"/>
+                                        <state key="normal" image="Record"/>
+                                        <state key="selected" image="Stop"/>
+                                        <connections>
+                                            <action selector="recordButtonPressed:" destination="gBG-uh-iZm" eventType="touchUpInside" id="SyJ-XC-zFy"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstItem="JyR-g1-66d" firstAttribute="centerX" secondItem="SwB-ld-gBA" secondAttribute="centerX" id="IOe-Nu-k2s"/>
+                                    <constraint firstAttribute="bottom" secondItem="JyR-g1-66d" secondAttribute="bottom" constant="50" id="RAg-dA-ZQr"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="SwB-ld-gBA" firstAttribute="leading" secondItem="Zey-l1-f7F" secondAttribute="leading" id="B3e-KJ-lvU"/>
+                            <constraint firstAttribute="bottom" secondItem="SwB-ld-gBA" secondAttribute="bottom" id="L3C-dK-RnH"/>
+                            <constraint firstItem="SwB-ld-gBA" firstAttribute="trailing" secondItem="Zey-l1-f7F" secondAttribute="trailing" id="cTZ-9A-2Er"/>
+                            <constraint firstItem="SwB-ld-gBA" firstAttribute="top" secondItem="Zey-l1-f7F" secondAttribute="top" id="xa8-Fx-hxi"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Zey-l1-f7F"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="IDP-7t-OEW">
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="tcg-YN-25L">
+                            <connections>
+                                <action selector="saveButtonPressed:" destination="gBG-uh-iZm" id="qOF-ud-xBq"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="cameraView" destination="SwB-ld-gBA" id="aPr-Ac-dji"/>
+                        <outlet property="recordButton" destination="JyR-g1-66d" id="oOB-OY-f2A"/>
+                        <outlet property="saveButton" destination="tcg-YN-25L" id="q2z-pE-Jou"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SHe-WY-vQM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1216" y="899"/>
+        </scene>
         <!--Title-->
         <scene sceneID="9zi-Aq-zJI">
             <objects>
@@ -547,6 +601,8 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Record" width="116" height="116"/>
+        <image name="Stop" width="116" height="116"/>
         <image name="mic.fill" catalog="system" width="108" height="128"/>
         <image name="stop.fill" catalog="system" width="128" height="113"/>
     </resources>

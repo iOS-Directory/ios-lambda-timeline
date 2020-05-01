@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		047D7196244EBD5400F6ABBD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 047D7195244EBD5400F6ABBD /* GoogleService-Info.plist */; };
+		04D24167245AEABC0030F92C /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D24166245AEABC0030F92C /* CameraViewController.swift */; };
+		04D24169245AED9F0030F92C /* CameraPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D24168245AED9F0030F92C /* CameraPreviewView.swift */; };
 		047D71BF245175BD00F6ABBD /* AudioCommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047D71BE245175BD00F6ABBD /* AudioCommentViewController.swift */; };
 		04D24141245720670030F92C /* UIImage+Scaling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D24140245720670030F92C /* UIImage+Scaling.swift */; };
 		4646377C216FDE4B00E7FF73 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4646377B216FDE4B00E7FF73 /* AppDelegate.swift */; };
@@ -37,6 +39,8 @@
 
 /* Begin PBXFileReference section */
 		047D7195244EBD5400F6ABBD /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		04D24166245AEABC0030F92C /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		04D24168245AED9F0030F92C /* CameraPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreviewView.swift; sourceTree = "<group>"; };
 		047D71BE245175BD00F6ABBD /* AudioCommentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCommentViewController.swift; sourceTree = "<group>"; };
 		04D24140245720670030F92C /* UIImage+Scaling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Scaling.swift"; sourceTree = "<group>"; };
 		33A2B89DE9E21538434BD640 /* Pods-LambdaTimeline.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LambdaTimeline.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LambdaTimeline/Pods-LambdaTimeline.debug.xcconfig"; sourceTree = "<group>"; };
@@ -167,6 +171,8 @@
 				46A0366921700F5100E7FF73 /* PostsCollectionViewController.swift */,
 				46CFE6F421707D0000E7FF73 /* ImagePostViewController.swift */,
 				46D571F72173FC2700E7FF73 /* ImagePostDetailTableViewController.swift */,
+				04D24166245AEABC0030F92C /* CameraViewController.swift */,
+				04D24168245AED9F0030F92C /* CameraPreviewView.swift */,
 				047D71BE245175BD00F6ABBD /* AudioCommentViewController.swift */,
 			);
 			path = "View Controllers";
@@ -356,6 +362,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				46A0366D2170158900E7FF73 /* SignInViewController.swift in Sources */,
+				04D24167245AEABC0030F92C /* CameraViewController.swift in Sources */,
 				46CFE6FB21714E6100E7FF73 /* Author.swift in Sources */,
 				46CFE6F92170862C00E7FF73 /* ShiftableViewController.swift in Sources */,
 				4646377C216FDE4B00E7FF73 /* AppDelegate.swift in Sources */,
@@ -373,6 +380,7 @@
 				4646379C2170091A00E7FF73 /* PostController.swift in Sources */,
 				464637992170048900E7FF73 /* FirebaseConvertible.swift in Sources */,
 				46A0366A21700F5100E7FF73 /* PostsCollectionViewController.swift in Sources */,
+				04D24169245AED9F0030F92C /* CameraPreviewView.swift in Sources */,
 				46D571F52173CF3E00E7FF73 /* UIImage+Ratio.swift in Sources */,
 				46463792216FFDD900E7FF73 /* Comment.swift in Sources */,
 				46CFE6F721707FA600E7FF73 /* UIViewController+InformationalAlert.swift in Sources */,
