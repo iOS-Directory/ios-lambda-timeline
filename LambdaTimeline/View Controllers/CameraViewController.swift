@@ -133,7 +133,45 @@ class CameraViewController: UIViewController {
     }
     
     @IBAction func saveButtonPressed(_ sender: UIBarButtonItem) {
-        print("Save button pressed")
+        
+        //1.Create popup alert
+        let alert = UIAlertController(title: "Save Video Recording", message: "Enter Title below", preferredStyle: .alert)
+        
+        //2.Create textfield
+        var titleTextField: UITextField?
+        
+        alert.addTextField { (textField) in
+            textField.placeholder = "Title:"
+            titleTextField = textField
+        }
+        
+        //3.Button to confirm save
+        let addTitleAction = UIAlertAction(title: "Save", style: .default) { (_) in
+            
+            //Make sure there is a title
+            guard let titleText = titleTextField?.text, titleText != "" else {
+                self.presentInformationalAlertController(title: "Oops", message: "You must specify a title, please try saving the video again.")
+                return
+            }
+            
+            //FIXME: Save video to FireBase
+            
+            print("Pressed saved: \(titleText)")
+            
+            //Dismiss view
+            DispatchQueue.main.async {
+                self.navigationController?.popViewController(animated: true)
+            }
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        //Add it to the alert
+        alert.addAction(addTitleAction)
+        alert.addAction(cancelAction)
+        
+        //Present it to the view
+        present(alert, animated: true,completion: nil)
     }
     
 }
