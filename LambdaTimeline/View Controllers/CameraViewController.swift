@@ -20,6 +20,7 @@ class CameraViewController: UIViewController {
     //MARK: - Oulets
     @IBOutlet weak var cameraView: CameraPreviewView!
     @IBOutlet weak var recordButton: UIButton!
+    @IBOutlet weak var saveButton: UIBarButtonItem!
     
     
     //MARK: - View Lifecycle
@@ -29,6 +30,7 @@ class CameraViewController: UIViewController {
         
         // Do any additional setup after loading the view.
         setupCaptureSession()
+        saveButton.isEnabled = false
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -122,6 +124,7 @@ class CameraViewController: UIViewController {
     
     private func updateView(){
         recordButton.isSelected = fileOutput.isRecording
+        saveButton.isEnabled = !fileOutput.isRecording
     }
     
     //MARK: - Actions
@@ -129,13 +132,19 @@ class CameraViewController: UIViewController {
         toggleRecord()
     }
     
+    @IBAction func saveButtonPressed(_ sender: UIBarButtonItem) {
+        print("Save button pressed")
+    }
+    
 }
 
 
+
+    //MARK: - AVCaptureFileOutputRecordingDelegate
 extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
     
     func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
-        
+        updateView()
     }
     
     
@@ -143,6 +152,15 @@ extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
         if let error = error{
             print("Error saving video: \(error)")
         }
+        updateView()
+        //TODO: Save url to firebase to retrive video later
+        if outputFileURL.isFileURL{
+            
+            print(outputFileURL.absoluteString)
+        }else{
+            saveButton.isEnabled = false
+        }
+        
     }
     
 

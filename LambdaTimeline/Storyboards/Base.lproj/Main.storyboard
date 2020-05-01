@@ -409,10 +409,17 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Zey-l1-f7F"/>
                     </view>
-                    <navigationItem key="navigationItem" id="IDP-7t-OEW"/>
+                    <navigationItem key="navigationItem" id="IDP-7t-OEW">
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="tcg-YN-25L">
+                            <connections>
+                                <action selector="saveButtonPressed:" destination="gBG-uh-iZm" id="qOF-ud-xBq"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="cameraView" destination="SwB-ld-gBA" id="aPr-Ac-dji"/>
                         <outlet property="recordButton" destination="JyR-g1-66d" id="oOB-OY-f2A"/>
+                        <outlet property="saveButton" destination="tcg-YN-25L" id="q2z-pE-Jou"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SHe-WY-vQM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
