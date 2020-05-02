@@ -10,12 +10,14 @@ import UIKit
 import AVFoundation
 
 class CameraViewController: UIViewController {
-
+    
     
     //MARK: - Properties
     lazy private var captureSession = AVCaptureSession()
-    
     lazy private var fileOutput = AVCaptureMovieFileOutput()
+    private var outputFileURL: URL?
+    private var player: AVPlayer!
+    var postController: PostController!
     
     //MARK: - Oulets
     @IBOutlet weak var cameraView: CameraPreviewView!
@@ -37,7 +39,7 @@ class CameraViewController: UIViewController {
         super.viewDidAppear(animated)
         captureSession.startRunning()
     }
-
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         captureSession.stopRunning()
@@ -47,18 +49,18 @@ class CameraViewController: UIViewController {
     
     private func setupCaptureSession() {
         //Get the best available camera
-      let camera = bestCamera()
+        let camera = bestCamera()
         
         captureSession.beginConfiguration()
         
         // Add inputs
-
+        
         guard let cameraInput = try? AVCaptureDeviceInput(device: camera),
-        captureSession.canAddInput(cameraInput) else {
-            fatalError("Can't create an input from the camera, do something better than crashing")
+            captureSession.canAddInput(cameraInput) else {
+                fatalError("Can't create an input from the camera, do something better than crashing")
         }
         captureSession.addInput(cameraInput)
-                
+        
         //Set video quality
         if captureSession.canSetSessionPreset(.hd1920x1080) {
             captureSession.sessionPreset = .hd1920x1080
@@ -86,13 +88,13 @@ class CameraViewController: UIViewController {
     
     private func bestCamera() -> AVCaptureDevice {
         if let device = AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back) {
-                //If this camera is available then we return it
-                return device
+            //If this camera is available then we return it
+            return device
         }
         if let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) {
-                  //If this camera is available then we return it
-                  return device
-          }
+            //If this camera is available then we return it
+            return device
+        }
         fatalError("No cameras on the device (or you are running it on the iPhone simulator")
     }
     
@@ -112,19 +114,40 @@ class CameraViewController: UIViewController {
     }
     
     private func newRecordingURL() -> URL {
-            let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-
-            let formatter = ISO8601DateFormatter()
-            formatter.formatOptions = [.withInternetDateTime]
-
-            let name = formatter.string(from: Date())
-            let fileURL = documentsDirectory.appendingPathComponent(name).appendingPathExtension("mov")
-            return fileURL
-        }
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime]
+        
+        let name = formatter.string(from: Date())
+        let fileURL = documentsDirectory.appendingPathComponent(name).appendingPathExtension("mov")
+        return fileURL
+    }
     
     private func updateView(){
         recordButton.isSelected = fileOutput.isRecording
         saveButton.isEnabled = !fileOutput.isRecording
+    }
+    
+    private func playMovie(url: URL){
+        player = AVPlayer(url: url)
+        
+        //To present a video we need a diferent layer than the one presenting the live video
+        let playerLayer = AVPlayerLayer(player: player)
+        
+        //Put the vide tumbnail on the top left corner
+        var topRect = view.bounds
+        topRect.size.height = topRect.size.height / 4
+        topRect.size.width = topRect.size.width / 4
+        //Prevent the tuhbnail from going out of the safe area
+        topRect.origin.y = view.layoutMargins.top
+        
+        playerLayer.frame = topRect
+        //Added to the view
+        view.layer.addSublayer(playerLayer)
+        
+        //Automatically play the movie
+        player.play()
     }
     
     //MARK: - Actions
@@ -154,14 +177,43 @@ class CameraViewController: UIViewController {
                 return
             }
             
-            //FIXME: Save video to FireBase
-            
-            print("Pressed saved: \(titleText)")
-            
-            //Dismiss view
-            DispatchQueue.main.async {
-                self.navigationController?.popViewController(animated: true)
+            //Fix
+            guard let url = self.outputFileURL else {
+                print("Error while getting file from URL: \(self.outputFileURL!)")
+                return
+                
             }
+            
+            let mediaData: Data?
+            
+            do{
+                mediaData = try Data(contentsOf: url)
+            }catch{
+                NSLog("Error getting video data: \(error)")
+                return
+            }
+            
+            guard let data = mediaData else {
+                print("No data do catch block")
+                return}
+            
+            //FIXME: Save video to FireBase
+            self.postController.createPost(with: titleText, ofType: .video, mediaData: data){ (success) in
+                
+                //Handle unsuccessful post
+                guard success else {
+                    DispatchQueue.main.async {
+                        self.presentInformationalAlertController(title: "Error", message: "Unable to create post. Try again.")
+                    }
+                    return
+                }
+                
+                //Dismiss view
+                DispatchQueue.main.async {
+                    self.navigationController?.popViewController(animated: true)
+                }
+            }
+            
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
@@ -178,7 +230,7 @@ class CameraViewController: UIViewController {
 
 
 
-    //MARK: - AVCaptureFileOutputRecordingDelegate
+//MARK: - AVCaptureFileOutputRecordingDelegate
 extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
     
     func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
@@ -189,17 +241,15 @@ extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if let error = error{
             print("Error saving video: \(error)")
-        }
-        updateView()
-        //TODO: Save url to firebase to retrive video later
-        if outputFileURL.isFileURL{
-            
-            print(outputFileURL.absoluteString)
         }else{
-            saveButton.isEnabled = false
-        }
+            
+        playMovie(url: outputFileURL)
+        //pass the url to be use during the save event
+        self.outputFileURL = outputFileURL
         
+        updateView()
+    }
     }
     
-
+    
 }

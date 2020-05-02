@@ -9,6 +9,7 @@
 import UIKit
 import FirebaseAuth
 import FirebaseUI
+import AVFoundation
 
 class PostsCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
@@ -72,9 +73,21 @@ class PostsCollectionViewController: UICollectionViewController, UICollectionVie
             loadImage(for: cell, forItemAt: indexPath)
             
             return cell
+            
+        case .video:
+            
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImagePostCell", for: indexPath) as? ImagePostCollectionViewCell else { return UICollectionViewCell() }
+        
+        
+        cell.post = post
+        
+        playMovie(url: post.mediaURL, for: cell, forItemAt: indexPath)
+        
+        return cell
         }
     }
     
+    //FIXME: CHECK FIREBASE STORAGE LIMIT AND FIX THE PLAY FUNC
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         var size = CGSize(width: view.frame.width, height: view.frame.width)
@@ -88,6 +101,14 @@ class PostsCollectionViewController: UICollectionViewController, UICollectionVie
             guard let ratio = post.ratio else { return size }
             
             size.height = size.width * ratio
+            
+        case .video:
+            
+         
+        guard let ratio = post.ratio else { return size }
+        
+        size.height = size.width * ratio
+            
         }
         
         return size
@@ -156,6 +177,27 @@ class PostsCollectionViewController: UICollectionViewController, UICollectionVie
         
         operations[postID] = fetchOp
     }
+    
+    private func playMovie(url: URL, for imagePostCell: ImagePostCollectionViewCell, forItemAt indexPath: IndexPath){
+        
+        player = AVPlayer(url: url)
+        
+        //To present a video we need a diferent layer than the one presenting the live video
+        let playerLayer = AVPlayerLayer(player: player)
+        
+        //Put the vide tumbnail on the top left corner
+        var topRect = view.bounds
+        topRect.size.height = topRect.size.height
+        topRect.size.width = topRect.size.width
+        //Prevent the tuhbnail from going out of the safe area
+        topRect.origin.y = view.layoutMargins.top
+        
+        playerLayer.frame = topRect
+        //Added to the view
+        imagePostCell.layer.addSublayer(playerLayer)
+        //Automatically play the movie
+        player.play()
+    }
     // MARK: - Navigation
     
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -174,6 +216,12 @@ class PostsCollectionViewController: UICollectionViewController, UICollectionVie
             destinationVC?.postController = postController
             destinationVC?.post = postController.posts[indexPath.row]
             destinationVC?.imageData = cache.value(for: postID)
+        }else if segue.identifier == "AddVideoPost" {
+            
+            let destinationVC = segue.destination as? CameraViewController
+            
+            destinationVC?.postController = postController
+            
         }
     }
     
@@ -181,4 +229,5 @@ class PostsCollectionViewController: UICollectionViewController, UICollectionVie
     private var operations = [String : Operation]()
     private let mediaFetchQueue = OperationQueue()
     private let cache = Cache<String, Data>()
+    private var player: AVPlayer!
 }
