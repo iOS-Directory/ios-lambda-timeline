@@ -184,22 +184,9 @@ class CameraViewController: UIViewController {
                 
             }
             
-            let mediaData: Data?
-            
-            do{
-                mediaData = try Data(contentsOf: url)
-            }catch{
-                NSLog("Error getting video data: \(error)")
-                return
-            }
-            
-            guard let data = mediaData else {
-                print("No data do catch block")
-                return}
-            
             //FIXME: Save video to FireBase
-            self.postController.createPost(with: titleText, ofType: .video, mediaData: data){ (success) in
-                
+            self.postController.createPost(with: titleText, ofType: .video, mediaData: nil, dataURL: url){ (success) in
+            
                 //Handle unsuccessful post
                 guard success else {
                     DispatchQueue.main.async {
@@ -213,7 +200,6 @@ class CameraViewController: UIViewController {
                     self.navigationController?.popViewController(animated: true)
                 }
             }
-            
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
@@ -242,7 +228,7 @@ extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
         if let error = error{
             print("Error saving video: \(error)")
         }else{
-            
+        print("Recorded link: \(outputFileURL)")
         playMovie(url: outputFileURL)
         //pass the url to be use during the save event
         self.outputFileURL = outputFileURL

@@ -13,11 +13,13 @@ import FirebaseStorage
 
 class PostController {
     
-    func createPost(with title: String, ofType mediaType: MediaType, mediaData: Data, ratio: CGFloat? = nil, completion: @escaping (Bool) -> Void = { _ in }) {
+    func createPost(with title: String, ofType mediaType: MediaType, mediaData: Data?, dataURL: URL?, ratio: CGFloat? = nil, completion: @escaping (Bool) -> Void = { _ in }) {
         
         guard let currentUser = Auth.auth().currentUser,
             let author = Author(user: currentUser) else { return }
         
+        if mediaType == .image{
+            guard let mediaData = mediaData else { return }
         store(mediaData: mediaData, mediaType: mediaType) { (mediaURL) in
             
             guard let mediaURL = mediaURL else { completion(false); return }
@@ -31,6 +33,24 @@ class PostController {
                 }
         
                 completion(true)
+            }
+        }
+        }else{
+            guard let dataURL = dataURL else { return }
+            storeVideo(mediaURL: dataURL, mediaType: mediaType) { (mediaURL) in
+                
+                guard let mediaURL = mediaURL else { completion(false); return }
+                
+                let imagePost = Post(title: title, mediaURL: mediaURL, ratio: ratio, mediaType: mediaType, author: author)
+                
+                self.postsRef.childByAutoId().setValue(imagePost.dictionaryRepresentation) { (error, ref) in
+                    if let error = error {
+                        NSLog("Error posting image post: \(error)")
+                        completion(false)
+                    }
+                    
+                    completion(true)
+                }
             }
         }
     }
@@ -84,10 +104,8 @@ class PostController {
         let mediaID = UUID().uuidString
         
         let mediaRef = storageRef.child(mediaType.rawValue).child(mediaID)
-        
-        let metadata = StorageMetadata(dictionary: ["mediaType" : mediaType.rawValue])
-       
-        let uploadTask = mediaRef.putData(mediaData, metadata: metadata) { (metadata, error) in
+      
+        let uploadTask = mediaRef.putData(mediaData, metadata: nil) { (metadata, error) in
             if let error = error {
                 NSLog("Error storing media data: \(error)")
                 completion(nil)
@@ -125,5 +143,44 @@ class PostController {
     
     let storageRef = Storage.storage().reference()
     
+    
+    
+    private func storeVideo(mediaURL: URL, mediaType: MediaType, completion: @escaping (URL?) -> Void) {
+        
+        let mediaID = UUID().uuidString
+        
+        let mediaRef = storageRef.child(mediaType.rawValue).child(mediaID)
+      
+        let uploadTask = mediaRef.putFile(from: mediaURL, metadata: nil) { (metadata, error) in
+            if let error = error {
+                NSLog("Error storing media data: \(error)")
+                completion(nil)
+                return
+            }
+            
+            if metadata == nil {
+                NSLog("No metadata returned from upload task.")
+                completion(nil)
+                return
+            }
+            
+            mediaRef.downloadURL(completion: { (url, error) in
+                
+                if let error = error {
+                    NSLog("Error getting download url of media: \(error)")
+                }
+                
+                guard let url = url else {
+                    NSLog("Download url is nil. Unable to create a Media object")
+                    
+                    completion(nil)
+                    return
+                }
+                completion(url)
+            })
+        }
+        
+        uploadTask.resume()
+    }
     
 }
