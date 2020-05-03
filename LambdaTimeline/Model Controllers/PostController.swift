@@ -22,7 +22,7 @@ class PostController {
             
             guard let mediaURL = mediaURL else { completion(false); return }
             
-            let imagePost = Post(title: title, mediaURL: mediaURL, ratio: ratio, author: author)
+            let imagePost = Post(title: title, mediaURL: mediaURL, ratio: ratio, mediaType: mediaType, author: author)
             
             self.postsRef.childByAutoId().setValue(imagePost.dictionaryRepresentation) { (error, ref) in
                 if let error = error {
@@ -85,7 +85,9 @@ class PostController {
         
         let mediaRef = storageRef.child(mediaType.rawValue).child(mediaID)
         
-        let uploadTask = mediaRef.putData(mediaData, metadata: nil) { (metadata, error) in
+        let metadata = StorageMetadata(dictionary: ["mediaType" : mediaType.rawValue])
+       
+        let uploadTask = mediaRef.putData(mediaData, metadata: metadata) { (metadata, error) in
             if let error = error {
                 NSLog("Error storing media data: \(error)")
                 completion(nil)
