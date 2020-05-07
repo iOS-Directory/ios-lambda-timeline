@@ -143,8 +143,6 @@ class PostController {
     
     let storageRef = Storage.storage().reference()
     
-    
-    
     private func storeVideo(mediaURL: URL, mediaType: MediaType, completion: @escaping (URL?) -> Void) {
         
         let mediaID = UUID().uuidString

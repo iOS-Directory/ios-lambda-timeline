@@ -19,13 +19,13 @@ class ImagePostViewController: ShiftableViewController {
     @IBOutlet weak var contrast: UISlider!
     @IBOutlet weak var saturation: UISlider!
     @IBOutlet weak var blur: UISlider!
-    @IBOutlet weak var distortionEffect: UISlider!
-    
+
     @IBOutlet weak var brightnessLabel: UILabel!
     @IBOutlet weak var contrastLabel: UILabel!
     @IBOutlet weak var saturationLabel: UILabel!
     @IBOutlet weak var blurLabel: UILabel!
-    @IBOutlet weak var distortionEffectLabel: UILabel!
+    @IBOutlet weak var locationLabel: UILabel!
+    @IBOutlet weak var locationSwiftchLabel: UISwitch!
     
     
     //MARK: - View LifeCycle
@@ -48,14 +48,15 @@ class ImagePostViewController: ShiftableViewController {
         contrastLabel.isHidden = state
         saturationLabel.isHidden = state
         blurLabel.isHidden = state
-        distortionEffectLabel.isHidden = state
+        locationLabel.isHidden = state
         
         //Sliders
         brightness.isHidden = state
         contrast.isHidden = state
         saturation.isHidden = state
         blur.isHidden = state
-        distortionEffect.isHidden = state
+        locationSwiftchLabel.isHidden = state
+
     }
     
     func updateViews() {
@@ -101,11 +102,6 @@ class ImagePostViewController: ShiftableViewController {
         //Blur filter
         ciBlurFilter.setValue(ciColorFilter.outputImage, forKey: kCIInputImageKey)
         ciBlurFilter.setValue(blur.value, forKey: kCIInputRadiusKey)
-        
- 
-        //Distortion effect
-        ciBumpDistortion.setValue(ciBlurFilter.outputImage, forKey: kCIInputImageKey)
-        ciBumpDistortion.setValue(distortionEffect.value, forKey: kCIInputRadiusKey)
 
         //Unwrap and Convert CIImage -> CGImage (Implement Context)
         guard let outputCIImage = ciBumpDistortion.outputImage,
@@ -142,7 +138,7 @@ class ImagePostViewController: ShiftableViewController {
     }
     
     //MARK: - Actions
-    
+     
     @IBAction func createPost(_ sender: Any) {
         
         view.endEditing(true)
@@ -218,8 +214,7 @@ class ImagePostViewController: ShiftableViewController {
         updateImage()
     }
     
-    @IBAction func distortionEffectSlider(_ sender: UISlider) {
-        updateImage()
+    @IBAction func locationSwitch(_ sender: UISwitch) {
     }
     
     
@@ -255,7 +250,6 @@ class ImagePostViewController: ShiftableViewController {
     
     
     //MARK: - Outlers 2
-    
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var chooseImageButton: UIButton!

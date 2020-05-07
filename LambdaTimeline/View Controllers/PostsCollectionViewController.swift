@@ -13,9 +13,12 @@ import AVFoundation
 
 class PostsCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
+    
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+  
         postController.observePosts { (_) in
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
@@ -54,6 +57,7 @@ class PostsCollectionViewController: UICollectionViewController, UICollectionVie
         self.present(alert, animated: true, completion: nil)
     }
     
+    
     // MARK: UICollectionViewDataSource
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -76,16 +80,15 @@ class PostsCollectionViewController: UICollectionViewController, UICollectionVie
             
         case .video:
             
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "videoPostCell", for: indexPath) as? ImagePostCollectionViewCell else { return UICollectionViewCell() }
-        
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImagePostCell", for: indexPath) as? ImagePostCollectionViewCell else { return UICollectionViewCell() }
+    
         cell.post = post
         let url = post.mediaURL
-        print("URL: \(url)")
+ 
         player = AVPlayer(url: url)
         let playerLayer = AVPlayerLayer(player: player)
         playerLayer.frame = cell.bounds
         cell.layer.addSublayer(playerLayer)
-        player.play()
         
         return cell
         }
@@ -124,6 +127,8 @@ class PostsCollectionViewController: UICollectionViewController, UICollectionVie
         if let cell = cell as? ImagePostCollectionViewCell,
             cell.imageView.image != nil {
             self.performSegue(withIdentifier: "ViewImagePost", sender: nil)
+        }else if let _ = cell?.layer.sublayers{
+            play()
         }
     }
     
@@ -133,7 +138,7 @@ class PostsCollectionViewController: UICollectionViewController, UICollectionVie
         operations[postID]?.cancel()
     }
     
-    func loadImage(for imagePostCell: ImagePostCollectionViewCell, forItemAt indexPath: IndexPath) {
+    private func loadImage(for imagePostCell: ImagePostCollectionViewCell, forItemAt indexPath: IndexPath) {
         let post = postController.posts[indexPath.row]
         
         guard let postID = post.id else { return }
@@ -182,10 +187,10 @@ class PostsCollectionViewController: UICollectionViewController, UICollectionVie
         operations[postID] = fetchOp
     }
     
-    private func playMovie(url: URL,for imagePostCell: ImagePostCollectionViewCell,forItemAt indexPath: IndexPath){
-        player = AVPlayer(url: url)
-        let playerLayer = AVPlayerLayer(player: player)
-        imagePostCell.layer.addSublayer(playerLayer)
+    private func play() {
+        player.seek(to: .zero)
+        player.play()
+        
     }
     // MARK: - Navigation
     
