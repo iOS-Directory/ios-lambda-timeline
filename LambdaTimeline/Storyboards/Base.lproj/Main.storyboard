@@ -514,10 +514,10 @@
             </objects>
             <point key="canvasLocation" x="1968.1159420289857" y="472.09821428571428"/>
         </scene>
-        <!--View Controller-->
+        <!--Map View Controller-->
         <scene sceneID="eW5-jF-9lu">
             <objects>
-                <viewController id="VXn-ao-gj2" sceneMemberID="viewController">
+                <viewController id="VXn-ao-gj2" customClass="MapViewController" customModule="LambdaTimeline" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5PY-In-9x7">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -536,6 +536,9 @@
                         <viewLayoutGuide key="safeArea" id="wMe-GY-4O3"/>
                     </view>
                     <navigationItem key="navigationItem" id="tEh-MK-J2C"/>
+                    <connections>
+                        <outlet property="mapView" destination="qUp-9S-sXq" id="cha-GH-okc"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LH6-Ql-krC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
