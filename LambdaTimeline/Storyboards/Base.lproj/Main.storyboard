@@ -132,7 +132,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="2uF-11-ETX"/>
                     <connections>
-                        <outlet property="mapview" destination="Qk1-t0-99L" id="GC7-4E-AMY"/>
+                        <outlet property="mapView" destination="Qk1-t0-99L" id="GC7-4E-AMY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mkZ-eS-UXL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

@@ -15,13 +15,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     //MARK: - Properties
     var post: Post?
 
-    @IBOutlet weak var mapview: MKMapView!
+    @IBOutlet weak var mapView: MKMapView!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        mapview.delegate = self
+        mapView.delegate = self
         showLocation()
     }
     
@@ -33,9 +33,19 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         let lon = CLLocationDegrees(floatLiteral: post.lon)
         print(lat,lon)
         let geoTag = CLLocationCoordinate2D(latitude: lat, longitude: lon)
-        let coodinateSpan = MKCoordinateSpan(latitudeDelta: 2, longitudeDelta: 2)
+        createAnotation(for: geoTag)
+        let coodinateSpan = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
         let coordinateRegion = MKCoordinateRegion(center: geoTag, span: coodinateSpan)
-        self.mapview.setRegion(coordinateRegion, animated: true)
+        self.mapView.setRegion(coordinateRegion, animated: true)
     }
+    
+    
+    func createAnotation(for location: CLLocationCoordinate2D)  {
+        let anotation = MKPointAnnotation()
+         anotation.coordinate = location
+        self.mapView.addAnnotation(anotation)
+    }
+    
+    
     
 }
