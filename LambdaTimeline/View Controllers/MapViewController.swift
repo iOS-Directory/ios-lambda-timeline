@@ -17,7 +17,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -38,7 +37,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         let coordinateRegion = MKCoordinateRegion(center: geoTag, span: coodinateSpan)
         self.mapView.setRegion(coordinateRegion, animated: true)
     }
-    
     
     func createAnotation(for location: CLLocationCoordinate2D)  {
         let anotation = MKPointAnnotation()
