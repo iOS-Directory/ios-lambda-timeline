@@ -14,6 +14,15 @@ import MapKit
 
 class PostsCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
+    //MARK: - Properties
+    private let postController = PostController()
+    private var operations = [String : Operation]()
+    private let mediaFetchQueue = OperationQueue()
+    private let cache = Cache<String, Data>()
+    private var player: AVPlayer!
+    fileprivate let locationManager: CLLocationManager = CLLocationManager()
+    
+    //MARK: - View LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -22,7 +31,11 @@ class PostsCollectionViewController: UICollectionViewController, UICollectionVie
                 self.collectionView.reloadData()
             }
         }
+        
+        userLocation()
     }
+    
+    //MARK: - Actions
     
     @IBAction func signout(_ sender: Any) {
         let firebaseAuth = Auth.auth()
@@ -55,7 +68,12 @@ class PostsCollectionViewController: UICollectionViewController, UICollectionVie
         self.present(alert, animated: true, completion: nil)
     }
     
-    // MARK: UICollectionViewDataSource
+    @IBAction func locationButtonPressed(_ sender: UIButton) {
+        print(sender.tag)
+    }
+    
+    
+    //MARK: - UICollectionViewDataSource
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return postController.posts.count
@@ -118,7 +136,6 @@ class PostsCollectionViewController: UICollectionViewController, UICollectionVie
         return size
     }
     
-    //FIXME: Added video selection
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath)
         
@@ -134,6 +151,7 @@ class PostsCollectionViewController: UICollectionViewController, UICollectionVie
         operations[postID]?.cancel()
     }
     
+    //MARK: - Custom Methods
     func loadImage(for imagePostCell: ImagePostCollectionViewCell, forItemAt indexPath: IndexPath) {
         let post = postController.posts[indexPath.row]
         
@@ -188,36 +206,42 @@ class PostsCollectionViewController: UICollectionViewController, UICollectionVie
         let playerLayer = AVPlayerLayer(player: player)
         imagePostCell.layer.addSublayer(playerLayer)
     }
+    
+    func userLocation() {
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.distanceFilter = kCLDistanceFilterNone
+        locationManager.startUpdatingLocation()
+    }
+    
     // MARK: - Navigation
     
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "AddImagePost" {
-            let destinationVC = segue.destination as? ImagePostViewController
-            destinationVC?.postController = postController
+            let addImageVC = segue.destination as? ImagePostViewController
+            addImageVC?.postController = postController
+            addImageVC?.location = self.locationManager.location?.coordinate
             
         } else if segue.identifier == "ViewImagePost" {
             
-            let destinationVC = segue.destination as? ImagePostDetailTableViewController
+            let viewImageVC = segue.destination as? ImagePostDetailTableViewController
             
             guard let indexPath = collectionView.indexPathsForSelectedItems?.first,
                 let postID = postController.posts[indexPath.row].id else { return }
             
-            destinationVC?.postController = postController
-            destinationVC?.post = postController.posts[indexPath.row]
-            destinationVC?.imageData = cache.value(for: postID)
+            viewImageVC?.postController = postController
+            viewImageVC?.post = postController.posts[indexPath.row]
+            viewImageVC?.imageData = cache.value(for: postID)
+            
         }else if segue.identifier == "AddVideoPost" {
             
-            let destinationVC = segue.destination as? CameraViewController
+            let postVideoVC = segue.destination as? CameraViewController
             
-            destinationVC?.postController = postController
+            postVideoVC?.postController = postController
+            postVideoVC?.location = self.locationManager.location?.coordinate
             
         }
     }
-    
-    private let postController = PostController()
-    private var operations = [String : Operation]()
-    private let mediaFetchQueue = OperationQueue()
-    private let cache = Cache<String, Data>()
-    private var player: AVPlayer!
+
 }

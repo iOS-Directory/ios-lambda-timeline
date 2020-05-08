@@ -22,11 +22,16 @@ class PostController {
         
         if mediaType == .image{
             guard let mediaData = mediaData else { return }
-        store(mediaData: mediaData, mediaType: mediaType) { (mediaURL) in
+            
+        store(mediaData: mediaData, mediaType: mediaType, geoTag: geoTag) { (mediaURL) in
             
             guard let mediaURL = mediaURL else { completion(false); return }
             
-            let imagePost = Post(title: title, mediaURL: mediaURL, ratio: ratio, mediaType: mediaType, author: author)
+            guard let lon = geoTag?.longitude else { completion(false); return }
+            
+            guard let lat = geoTag?.latitude else { completion(false); return }
+            
+            let imagePost = Post(title: title, mediaURL: mediaURL, ratio: ratio, mediaType: mediaType, author: author, lon: lon, lat: lat)
             
             self.postsRef.childByAutoId().setValue(imagePost.dictionaryRepresentation) { (error, ref) in
                 if let error = error {
@@ -38,13 +43,17 @@ class PostController {
         }
         }else{
             guard let dataURL = dataURL else { return }
-            storeVideo(mediaURL: dataURL, mediaType: mediaType) { (mediaURL) in
+            
+            storeVideo(mediaURL: dataURL, mediaType: mediaType, geoTag: geoTag ) { (mediaURL)  in
                 
                 guard let mediaURL = mediaURL else { completion(false); return }
                 
-                let imagePost = Post(title: title, mediaURL: mediaURL, ratio: ratio, mediaType: mediaType, author: author)
+                guard let lon = geoTag?.longitude else { completion(false); return }
+                guard let lat = geoTag?.latitude else { completion(false); return }
                 
-                self.postsRef.childByAutoId().setValue(imagePost.dictionaryRepresentation) { (error, ref) in
+                let videoPost = Post(title: title, mediaURL: mediaURL, ratio: ratio, mediaType: mediaType, author: author, lon: lon, lat: lat)
+                
+                self.postsRef.childByAutoId().setValue(videoPost.dictionaryRepresentation) { (error, ref) in
                     if let error = error {
                         NSLog("Error posting image post: \(error)")
                         completion(false)
@@ -100,12 +109,12 @@ class PostController {
         ref.setValue(post.dictionaryRepresentation)
     }
 
-    private func store(mediaData: Data, mediaType: MediaType, completion: @escaping (URL?) -> Void) {
+    private func store(mediaData: Data, mediaType: MediaType, geoTag: CLLocationCoordinate2D?, completion: @escaping (URL?) -> Void) {
         
         let mediaID = UUID().uuidString
         
         let mediaRef = storageRef.child(mediaType.rawValue).child(mediaID)
-      
+        
         let uploadTask = mediaRef.putData(mediaData, metadata: nil) { (metadata, error) in
             if let error = error {
                 NSLog("Error storing media data: \(error)")
@@ -115,7 +124,7 @@ class PostController {
             
             if metadata == nil {
                 NSLog("No metadata returned from upload task.")
-                completion(nil)
+               completion(nil)
                 return
             }
             
@@ -131,6 +140,7 @@ class PostController {
                     completion(nil)
                     return
                 }
+                
                 completion(url)
             })
         }
@@ -146,13 +156,18 @@ class PostController {
     
     
     
-    private func storeVideo(mediaURL: URL, mediaType: MediaType, completion: @escaping (URL?) -> Void) {
+    private func storeVideo(mediaURL: URL, mediaType: MediaType, geoTag: CLLocationCoordinate2D?, completion: @escaping (URL? ) -> Void) {
         
         let mediaID = UUID().uuidString
         
         let mediaRef = storageRef.child(mediaType.rawValue).child(mediaID)
-      
-        let uploadTask = mediaRef.putFile(from: mediaURL, metadata: nil) { (metadata, error) in
+        
+        guard let meta = geoTag else { return }
+        
+        let metaData = getLocationMetaData(geoTag: meta)
+        
+        let uploadTask = mediaRef.putFile(from: mediaURL, metadata: metaData) { (metadata, error) in
+            
             if let error = error {
                 NSLog("Error storing media data: \(error)")
                 completion(nil)
@@ -177,11 +192,22 @@ class PostController {
                     completion(nil)
                     return
                 }
+                
+            
+                
                 completion(url)
             })
         }
         
         uploadTask.resume()
+    }
+    
+    private func getLocationMetaData(geoTag: CLLocationCoordinate2D) -> StorageMetadata {
+        let lon = geoTag.longitude
+        let lat = geoTag.latitude
+        let meta = StorageMetadata(dictionary: ["longitude" : lon, "latitude": lat])
+        
+        return meta!
     }
     
 }

@@ -161,6 +161,15 @@ class ImagePostDetailTableViewController: UITableViewController {
         }
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "mapView"{
+            guard let mapVC = segue.destination as? MapViewController else{return}
+            mapVC.post = self.post
+            
+            
+        }
+    }
+    //MARK: - Custom Methods
     func prepareAudioSession() throws {
         let session = AVAudioSession.sharedInstance()
         try session.setCategory(.playAndRecord, options: [.defaultToSpeaker])
