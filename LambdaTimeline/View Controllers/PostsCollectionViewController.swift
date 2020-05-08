@@ -10,6 +10,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseUI
 import AVFoundation
+import MapKit
 
 class PostsCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     

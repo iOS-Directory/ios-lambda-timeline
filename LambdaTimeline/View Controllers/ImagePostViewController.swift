@@ -157,7 +157,7 @@ class ImagePostViewController: ShiftableViewController {
             return
         }
         
-        postController.createPost(with: title, ofType: .image, mediaData: imageData, dataURL: nil, ratio: imageView.image?.ratio) { (success) in
+        postController.createPost(with: title, ofType: .image, mediaData: imageData, dataURL: nil, ratio: imageView.image?.ratio, geoTag: location) { (success) in
             guard success else {
                 DispatchQueue.main.async {
                     self.presentInformationalAlertController(title: "Error", message: "Unable to create post. Try again.")
@@ -252,7 +252,7 @@ class ImagePostViewController: ShiftableViewController {
     private let ciColorFilter = CIFilter(name: "CIColorControls")!
     private let ciBlurFilter = CIFilter(name: "CIGaussianBlur")!
     private let ciBumpDistortion = CIFilter(name: "CIBumpDistortion")!
-    
+    var location: CLLocationCoordinate2D?
     
     //MARK: - Outlers 2
     

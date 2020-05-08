@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import MapKit
 
 class CameraViewController: UIViewController {
     
@@ -18,6 +19,7 @@ class CameraViewController: UIViewController {
     private var outputFileURL: URL?
     private var player: AVPlayer!
     var postController: PostController!
+    var location: CLLocationCoordinate2D?
     
     //MARK: - Oulets
     @IBOutlet weak var cameraView: CameraPreviewView!
@@ -185,7 +187,7 @@ class CameraViewController: UIViewController {
             }
             
             //FIXME: Save video to FireBase
-            self.postController.createPost(with: titleText, ofType: .video, mediaData: nil, dataURL: url){ (success) in
+            self.postController.createPost(with: titleText, ofType: .video, mediaData: nil, dataURL: url,ratio: nil, geoTag: self.location ){ (success) in
             
                 //Handle unsuccessful post
                 guard success else {
